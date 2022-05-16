@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: internal
+    active: external
 
 tax-exempted-vehicles:
   vehicles:
