@@ -1,29 +1,10 @@
 version: "3.7"
 services:
 
-  mysql:
-    container_name: mysql
-    image: mysql:8.0
-    restart: always
-    ports:
-      - "3307:3306"
-    environment:
-      MYSQL_DATABASE: tax_db
-      MYSQL_USER: tax_username
-      MYSQL_PASSWORD: tax_password
-      MYSQL_ROOT_PASSWORD: root_password
-
   traffic-tax-calculator:
     container_name: traffic-tax-calculator
-    depends_on:
-      - mysql
     image: traffic-tax-calculator:latest
     build: .
     restart: always
     ports:
       - "8081:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/tax_db
-      SPRING_DATASOURCE_USERNAME: tax_username
-      SPRING_DATASOURCE_PASSWORD: tax_password
-

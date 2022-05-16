@@ -70,7 +70,7 @@ class TaxControllerTest {
     @Test
     void testTaxInJulyShouldReturn0() throws Exception {
 
-        String requestJson = readResource("input-request-002.json");
+        String requestJson = readResource("input-request-02.json");
 
         this.mockMvc
                 .perform(post("/calculateTax")
