@@ -8,11 +8,11 @@
         <version>2.5.6</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>congestion.calculator</groupId>
-    <artifactId>CongestionTaxCalculator</artifactId>
+    <groupId>com.negin</groupId>
+    <artifactId>traffic-tax-calculator</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>CongestionTaxCalculator</name>
-    <description>Demo project for CongestionTaxCalculator</description>
+    <name>traffic-tax-calculator</name>
+    <description>Traffic Tax Calculator</description>
     <properties>
         <java.version>11</java.version>
     </properties>
@@ -31,10 +31,6 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -43,7 +39,6 @@
             <groupId>org.springframework.retry</groupId>
             <artifactId>spring-retry</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aspects</artifactId>
