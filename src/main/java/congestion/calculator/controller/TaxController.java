@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 
 @RestController
 //@Api(value = "Tax Calculator Service")
-@OpenAPIDefinition(info = @Info(title = "Tax calculation API", version = "1.0", description = "this api calculate traffic tax "))
+@OpenAPIDefinition(info = @Info(title = "Tax calculation API", version = "0.0.1", description = "this api calculate traffic tax "))
 
 public class TaxController {
 

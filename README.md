@@ -6,13 +6,13 @@
 
 * Make sure you have docker engine installed.
 * Make sure you have docker-compose installed.
-* Run `docker-compose up -d` in the rood directory of the project
+* Run `docker-compose up -d` in the root directory of the project.
 
 ### What Happens Next.!?
 
-* It will start a container from an image that it builds for you
-* You can visit http://127.0.0.1:8081/swagger-ui/index.html in your browser
-* Now if you enter `/v3/api-docs` in the explore text box and press enter, you will see the swagger information about
+* It will start a container from an image that it builds for you.
+* You can visit http://127.0.0.1:8081/swagger-ui/index.html in your browser.
+* Now if you enter `/v3/api-docs` in the explore text box and press enter, you will see the swagger information about.
   the endpoint
 
 If you provide the JSON below as the input to the POST method:
@@ -45,4 +45,4 @@ You will get this response back:
 ```
 
 ### Externalising Application Configuration
-you can put different configuration as application.yml under external-properties folder in case you want to have different Time cost than the ones which is defined in this application .
+You can put different configuration as application.yml under external-properties folder in case you want to have different time cost than the ones which is defined in this application.
