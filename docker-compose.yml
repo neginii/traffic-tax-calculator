@@ -1,0 +1,12 @@
+version: "3.7"
+services:
+  mysql_db:
+    image: mysql:8.0
+    restart: always
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_DATABASE: tax_db
+      MYSQL_USER: tax_username
+      MYSQL_PASSWORD: tax_password
+      MYSQL_ROOT_PASSWORD: root_password
