@@ -36,12 +36,11 @@ public class TaxCongestionCalculationService {
         Arrays.sort(dates);
         LocalDateTime intervalStart = dates[0].plusMinutes(60);
         int totalFee = 0;
-
+        int tempFee = getTollFee(intervalStart.minusMinutes(60), vehicle);
         for (LocalDateTime date : dates) {
             int nextFee = getTollFee(date, vehicle);
-            int tempFee = getTollFee(intervalStart.minusMinutes(60), vehicle);
 
-            if (date.toLocalDate().equals(intervalStart.toLocalDate()) && date.isBefore(intervalStart)) {
+            if (date.toLocalDate().equals(intervalStart.toLocalDate()) && date.isBefore(intervalStart) || date.isEqual(intervalStart)) {
                 if (totalFee > 0) {
                     totalFee -= tempFee;
                 }
@@ -52,7 +51,8 @@ public class TaxCongestionCalculationService {
             } else {
                 totalFee += nextFee;
             }
-            intervalStart = date.plusMinutes(60);
+            tempFee=nextFee;
+
         }
 
         if (totalFee > 60) {
