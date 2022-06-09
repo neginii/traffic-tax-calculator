@@ -163,6 +163,22 @@ class TaxControllerTest {
                 .andExpect(jsonPath("$.message").value("tax calculated successfully"));
     }
 
+    @Test
+    void testSingleChargeRuleCombinedRegularRule() throws Exception {
+
+        String requestJson = readResource("input-request-08.json");
+
+        this.mockMvc
+                .perform(post("/calculateTax")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(jsonPath("$.tax.tax").value("36.0"))
+                .andExpect(jsonPath("$.message").value("tax calculated successfully"));
+    }
+
 
     private String readResource(String fileName) throws IOException {
         var classLoader = getClass().getClassLoader();
