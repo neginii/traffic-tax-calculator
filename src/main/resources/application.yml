@@ -7,17 +7,17 @@ spring:
   data.cassandra:
     keyspace-name: traffic_tax_calculator
     port: 9042
-    contact-points: localhost
+    contact-points: cassandra
     local-datacenter: datacenter1
     schema-action: CREATE_IF_NOT_EXISTS
   kafka:
     consumer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: kafka:9092
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     producer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: kafka:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
