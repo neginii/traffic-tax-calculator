@@ -2,7 +2,10 @@ package congestion.calculator.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import congestion.calculator.model.input.DailyTrafficEventsInput;
+import congestion.calculator.repository.DailyTrafficEventsRepository;
+import congestion.calculator.repository.tables.DailyTrafficEvents;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
@@ -15,11 +18,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import congestion.calculator.model.input.DailyTrafficEventsInput;
-import congestion.calculator.repository.DailyTrafficEventsRepository;
-import congestion.calculator.repository.tables.DailyTrafficEvents;
-import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @Service
@@ -50,15 +48,15 @@ public class TrafficEventListenerService {
             newCarEvent.setLicencePlateNumber(key);
             newCarEvent.setType(event.getType());
             newCarEvent.setEvents(convertToTimestamps(event.getEvents()));
-            dailyTrafficEventsRepository.save(newCarEvent);
-            log.info("First Time Detection -> {}", message);
+            DailyTrafficEvents record = dailyTrafficEventsRepository.save(newCarEvent);
+            log.info("{} | {} | First Time Detection | {} ", key, event.getType(), record.getEvents());
         } else {
             DailyTrafficEvents existingCarEvents = optionalExistingData.get();
             List<Timestamp> events = existingCarEvents.getEvents();
             events.add(Timestamp.valueOf(event.getEvents()[0]));
             existingCarEvents.setEvents(events);
             DailyTrafficEvents record = dailyTrafficEventsRepository.save(existingCarEvents);
-            log.info("Number of Detections: {} -> {}", record.getEvents().size(), message);
+            log.info("{} | {} | {} Times Detections | {}", key, event.getType(), record.getEvents().size(), record.getEvents());
         }
 
     }

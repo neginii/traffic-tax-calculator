@@ -1,5 +1,9 @@
 package congestion.calculator.service;
 
+import congestion.calculator.model.Tax;
+import congestion.calculator.model.input.TaxRequestInput;
+import congestion.calculator.repository.DailyTrafficEventsRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -7,16 +11,10 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
-import congestion.calculator.model.Tax;
-import congestion.calculator.model.input.TaxRequestInput;
-import congestion.calculator.repository.DailyTrafficEventsRepository;
-import lombok.extern.log4j.Log4j2;
-
 @Log4j2
 @Service
 public class TaxCalculatorPerDay {
 
-    private static final String TOPIC = "daily-tax-calculation-events";
     private final DailyTrafficEventsRepository dailyTrafficEventsRepository;
     private final TaxCongestionCalculationService taxCongestionCalculationService;
     private final KafkaProducerService kafkaProducerService;
