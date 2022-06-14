@@ -1,10 +1,56 @@
 version: "3.7"
+
+volumes:
+  cassandra_data:
+
 services:
+
+  zookeeper:
+    restart: unless-stopped
+    image: 'bitnami/zookeeper:latest'
+    container_name: zookeeper
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  kafka:
+    restart: unless-stopped
+    image: 'bitnami/kafka:latest'
+    container_name: kafka
+    ports:
+      - '9092:9092'
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper
+
+  cassandra:
+    restart: unless-stopped
+    image: negin/cassandra:latest
+    build:
+      context: docker-compose/cassandra
+    container_name: cassandra
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+    environment:
+      CASSANDRA_KEYSPACES: "traffic_tax_calculator"
 
   traffic-tax-calculator:
     container_name: traffic-tax-calculator
     image: traffic-tax-calculator:latest
     build: .
+    profiles:
+      - app
     restart: always
     ports:
       - "8081:8080"
+    depends_on:
+      - cassandra
+      - kafka

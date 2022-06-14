@@ -8,5 +8,4 @@ public class TimeCost {
     private String startTime;
     private String endTime;
     private int price;
-
 }

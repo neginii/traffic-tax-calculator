@@ -3,17 +3,20 @@ package congestion.calculator.model.input;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
-//@AllArgsConstructor
-public class TaxRequestInput implements Serializable {
+@Setter
+@Getter
+@ToString
+public class DailyTrafficEventsInput {
 
-    private String registrationNumber;
-    private String vehicleType;
+    private String licencePlateNumber;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime[] events;
+    private String type;
+
 }

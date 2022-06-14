@@ -6,7 +6,7 @@
 
 * Make sure you have docker engine installed.
 * Make sure you have docker-compose installed.
-* Run `docker-compose up -d` in the root directory of the project.
+* Run `docker compose --profile app up -d` in the root directory of the project.
 
 ### What Happens Next.!?
 

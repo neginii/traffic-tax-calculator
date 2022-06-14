@@ -4,15 +4,31 @@ server:
 spring:
   profiles:
     active: internal
+  data.cassandra:
+    keyspace-name: traffic_tax_calculator
+    port: 9042
+    contact-points: localhost
+    local-datacenter: datacenter1
+    schema-action: CREATE_IF_NOT_EXISTS
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
 tax-exempted-vehicles:
   vehicles:
-    - Motorcycle
-    - Bus
-    - Emergency
-    - Diplomat
-    - Military
-    - Foreign
+    - MOTORCYCLE
+    - BUS
+    - EMERGENCY
+    - DIPLOMAT
+    - MILITARY
+    - FOREIGN
 
 time-price:
   time-costs:

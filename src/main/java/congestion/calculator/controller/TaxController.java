@@ -34,7 +34,7 @@ public class TaxController {
             response = new TaxResponse(null, taxCongestionCalculationService.getTax(request), "tax calculated successfully");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            response = new TaxResponse(e.getLocalizedMessage(), new Tax(request.getRegistrationNumber(), request.getVehicleType(), request.getDates(), 0),
+            response = new TaxResponse(e.getLocalizedMessage(), new Tax(request.getRegistrationNumber(), request.getVehicleType(), request.getEvents(), 0),
                     "Tax calculation failed.");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }

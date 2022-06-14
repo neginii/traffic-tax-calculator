@@ -31,42 +31,62 @@ public class TaxCongestionCalculationService {
     }
 
     public Tax getTax(TaxRequestInput taxRequestInput) {
-        String vehicle = taxRequestInput.getVehicleType();
-        LocalDateTime[] dates = taxRequestInput.getDates();
-        Arrays.sort(dates);
-        LocalDateTime intervalStart = dates[0].plusMinutes(60);
+
+        String vehicleType = taxRequestInput.getVehicleType();
+        LocalDateTime[] events = taxRequestInput.getEvents();
+        Arrays.sort(events);
+        LocalDateTime intervalStart = events[0].plusMinutes(60);
+
         int totalFee = 0;
-        int tempFee = getTollFee(intervalStart.minusMinutes(60), vehicle);
-        for (LocalDateTime date : dates) {
-            int nextFee = getTollFee(date, vehicle);
+        int totalPerDay = 0;
+        int tempFee = getTollFee(intervalStart.minusMinutes(60), vehicleType);
 
-            if (date.toLocalDate().equals(intervalStart.toLocalDate()) && date.isBefore(intervalStart) || date.isEqual(intervalStart)) {
-                if (totalFee > 0) {
-                    totalFee -= tempFee;
-                }
-                if (nextFee >= tempFee) {
-                    tempFee = nextFee;
-                }
-                totalFee += tempFee;
-            } else {
-                totalFee += nextFee;
+        for (LocalDateTime event : events) {
+
+            int nextFee = getTollFee(event, vehicleType);
+
+            if (!event.toLocalDate().equals(intervalStart.toLocalDate())) {
+                totalFee += totalPerDay;
+                intervalStart = event.plusMinutes(60);
+                totalPerDay = 0;
+                tempFee = getTollFee(intervalStart.minusMinutes(60), vehicleType);
             }
-            tempFee=nextFee;
+
+            totalPerDay = calculateTaxForOneDay(intervalStart, totalPerDay, nextFee, tempFee, event);
+            if (totalPerDay > 60) {
+                totalPerDay = 60;
+            }
+            tempFee = nextFee;
 
         }
 
-        if (totalFee > 60) {
-            totalFee = 60;
+        totalFee += totalPerDay;
+
+        return new Tax(taxRequestInput.getRegistrationNumber(), vehicleType, events, totalFee);
+    }
+
+    private int calculateTaxForOneDay(LocalDateTime intervalStart, int totalFee, int nextFee, int tempFee, LocalDateTime date) {
+
+        if (date.isBefore(intervalStart) || date.isEqual(intervalStart)) {
+
+            if (totalFee > 0) {
+                totalFee -= tempFee;
+            }
+
+            if (nextFee >= tempFee) {
+                tempFee = nextFee;
+            }
+
+            totalFee += tempFee;
+        } else {
+            totalFee += nextFee;
         }
 
-        return new Tax(taxRequestInput.getRegistrationNumber(), vehicle, dates, totalFee);
+        return totalFee;
     }
 
     private boolean IsTollFreeVehicle(String vehicle) {
-        if (vehicle == null) {
-            return false;
-        }
-        return taxExemptedVehicles.getVehicles().contains(vehicle);
+        return vehicle != null && taxExemptedVehicles.getVehicles().contains(vehicle);
     }
 
     private int getTollFee(LocalDateTime date, String vehicle) {
@@ -74,13 +94,15 @@ public class TaxCongestionCalculationService {
         if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) {
             return 0;
         }
+
         List<TimeCost> timeCosts = this.timeCosts.getTimeCosts();
 
         for (TimeCost timeCost : timeCosts) {
             LocalDateTime startTime = LocalDateTime.of(date.toLocalDate(), LocalTime.parse(timeCost.getStartTime()));
             LocalDateTime endTime = LocalDateTime.of(date.toLocalDate(), LocalTime.parse(timeCost.getEndTime()));
 
-            if ((date.isAfter(startTime) || date.isEqual(startTime)) && (date.isBefore(endTime) || date.isEqual(endTime))) {
+            if ((date.isAfter(startTime) || date.isEqual(startTime)) && (date.isBefore(endTime) || date.minusSeconds(date.getSecond()
+            ).isEqual(endTime))) {
                 return timeCost.getPrice();
             }
         }

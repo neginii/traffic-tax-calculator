@@ -52,7 +52,7 @@ class TaxControllerTest {
     }
 
     @Test
-    void testTaxFreeVehicleShouldReturnsCorrectTaxCalculation() throws Exception {
+    void testNoneTaxFreeVehicleReturnsCorrectTaxCalculation() throws Exception {
 
         String requestJson = readResource("input-request-01.json");
 
@@ -63,7 +63,7 @@ class TaxControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
-                .andExpect(jsonPath("$.tax.tax").value("60.0"))
+                .andExpect(jsonPath("$.tax.tax").value("68.0"))
                 .andExpect(jsonPath("$.message").value("tax calculated successfully"));
     }
 
@@ -159,7 +159,7 @@ class TaxControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
-                .andExpect(jsonPath("$.tax.tax").value("18.0"))
+                .andExpect(jsonPath("$.tax.tax").value("26.0"))
                 .andExpect(jsonPath("$.message").value("tax calculated successfully"));
     }
 
@@ -176,6 +176,22 @@ class TaxControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
                 .andExpect(jsonPath("$.tax.tax").value("36.0"))
+                .andExpect(jsonPath("$.message").value("tax calculated successfully"));
+    }
+
+    @Test
+    void testMaximumTaxPerDayShouldBe60() throws Exception {
+
+        String requestJson = readResource("input-request-09.json");
+
+        this.mockMvc
+                .perform(post("/calculateTax")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(jsonPath("$.tax.tax").value("60.0"))
                 .andExpect(jsonPath("$.message").value("tax calculated successfully"));
     }
 
